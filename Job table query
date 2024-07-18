@@ -1,0 +1,10 @@
+let
+    Source = Web.Contents("https://www.roseint.com/hotjobs/"),
+    
+    // Optionally could use Web.BrowserContents(..) in the previous step to get the HTML code and not need to use Text.FromBinary also
+    #"Text From Binary" = Text.FromBinary( Source ),
+    #"Extracted Table From Html" = Html.Table(#"Text From Binary", {{"Column1", "TABLE[id='drgHotOpn'] > * > TR > :nth-child(1)"}, {"Column2", "TABLE[id='drgHotOpn'] > * > TR > :nth-child(2)"}, {"Column3", "TABLE[id='drgHotOpn'] > * > TR > :nth-child(3)"}, {"Column4", "TABLE[id='drgHotOpn'] > * > TR > :nth-child(4)"}, {"Column5", "TABLE[id='drgHotOpn'] > * > TR > :nth-child(5)"}, {"Column6", "TABLE[id='drgHotOpn'] > * > TR > :nth-child(6)"}}, [RowSelector="TABLE[id='drgHotOpn'] > * > TR"]),
+    #"Promoted Headers" = Table.PromoteHeaders(#"Extracted Table From Html", [PromoteAllScalars=true]),
+    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Position ID", Int64.Type}, {"Position Title", type text}, {"Country", type text}, {"State", type text}, {"City", type text}, {"Skills/Attributes", type text}})
+in
+    #"Changed Type"
