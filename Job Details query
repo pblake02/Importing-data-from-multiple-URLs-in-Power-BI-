@@ -1,3 +1,5 @@
+// I used the Get Data from Web function of Power Query to help me get started before I made improvements to make the query more dynamic (see Job Details query as a function)
+
 let
     Source = Web.BrowserContents("https://www.roseint.com/Jobs/Receptionist-OR-Portland-Rose-International-Job-467625.html?RD=W"),
     #"Extracted Table From Html" = Html.Table(Source, {{"Column1", ".col-xl-9 .bodyTextHeading5"}}),
