@@ -1,0 +1,9 @@
+let
+    Source = Web.BrowserContents("https://www.roseint.com/Jobs/Receptionist-OR-Portland-Rose-International-Job-467625.html?RD=W"),
+    #"Extracted Table From Html" = Html.Table(Source, {{"Column1", ".col-xl-9 .bodyTextHeading5"}}),
+    #"Split Column by Delimiter" = Table.SplitColumn(#"Extracted Table From Html", "Column1", Splitter.SplitTextByDelimiter(":", QuoteStyle.Csv), {"Column1.1", "Column1.2"}),
+    #"Transposed Table" = Table.Transpose(#"Split Column by Delimiter"),
+    #"Promoted Headers" = Table.PromoteHeaders(#"Transposed Table", [PromoteAllScalars=true]),
+    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers",{{"Date Posted", type date}, {"Hiring Organization", type text}, {"Position Number", Int64.Type}, {"Job Title", type text}, {"Job Location", type text}, {"Work Model", type text}, {"Employment Type", type text}, {"Estimated Duration (In months)", Int64.Type}, {"Min Hourly Rate($)", Int64.Type}, {"Max Hourly Rate($)", Int64.Type}, {"Must Have Skills/Attributes", type text}})
+in
+    #"Changed Type1"
