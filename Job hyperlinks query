@@ -1,0 +1,7 @@
+let
+    Source = Web.BrowserContents("https://www.roseint.com/hotjobs/"),
+    #"Extracted Table From Html" = Html.Table(Source, {{"Position ID", "[style*=""width\:8\.3\%""]"}, {"Hyperlink", "[style*=""width\:8\.3\%""] > A[target=""_blank""]:nth-child(1):nth-last-child(1)", each [Attributes][href]?}}, [RowSelector="[valign=""top""]"]),
+    #"Changed Type" = Table.TransformColumnTypes(#"Extracted Table From Html",{{"Hyperlink", type text}, {"Position ID", Int64.Type}}),
+    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Position ID"})
+in
+    #"Removed Columns"
